@@ -1,7 +1,7 @@
 ### Source Code
 All logic is in a single, well-commented Arduino sketch:
 
-→ [``](src/BlazeGuard.ino)
+→ [`blynk_blazeguard.ino`](src/BlazeGuard.ino)
 
 Key parts include:
 - Pin definitions
