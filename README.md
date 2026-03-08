@@ -10,7 +10,7 @@
 <h3 align="center">Low-Cost IoT Early Warning System with Dynamic Risk Scoring & Blynk Integration</h3>
 
 <p align="center">
-  <strong>Real-time forest fire detection using ESP32 • DHT22 • MQ-7 • Adaptive baselines • OLED display • Buzzer alerts • Blynk IoT notifications</strong><br>
+  <strong>Real-time forest fire detection using ESP32 • DHT22 • MQ-7 • Adaptive baselines • OLED display • Buzzer alerts • Blynk IoT notifications & email alerts</strong><br>
   Build cost: ~₹1200–1800 • Presented at Tech Expo Abhiyanth 2026
 </p>
 
@@ -20,7 +20,7 @@
 - **Core innovation**: Dynamic baselines recalibrated every 10 min **only when risk ≤ 40** (EWMA) — prevents false learning from fire conditions
 - 0.96" SSD1306 OLED with live values + large centered risk score
 - Active buzzer with rhythmic `tone()` patterns for High alerts
-- **Blynk integration** for remote monitoring & notifications (mobile app widgets)
+- **Blynk integration** for remote monitoring, dashboard widgets, push notifications & email alerts on risk escalation
 
 ### Hardware Prototype
 
@@ -34,20 +34,20 @@
   <br><em>Wiring overview – helps replication</em>
 </p>
 
-### OLED Risk Display Examples
+### Blynk Alert Examples (Email Notifications)
 
 <p align="center">
-  <img src="blazeguard_images/medium_risk.jpeg" alt="Medium Risk on OLED" width="320"/>
+  <img src="blazeguard_images/medium_risk.jpeg" alt="Medium Risk Alert Email via Blynk" width="320"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="blazeguard_images/high_risk.jpeg" alt="High Risk Alert on OLED" width="320"/>
-  <br><em>Left: Medium risk • Right: High risk triggered (demo mode)</em>
+  <img src="blazeguard_images/high_risk.jpeg" alt="High Risk Alert Email via Blynk" width="320"/>
+  <br><em>Left: Medium risk email notification • Right: High risk email notification received through Blynk</em>
 </p>
 
 ### Blynk Dashboard
 
 <p align="center">
-  <img src="blazeguard_images/blynk_widgets.jpeg" alt="Blynk Mobile App Widgets" width="400"/>
-  <br><em>Remote monitoring via Blynk – temperature, humidity, gas, risk score & alerts</em>
+  <img src="blazeguard_images/blynk_widgets.jpeg" alt="Blynk Mobile App Dashboard" width="400"/>
+  <br><em>Real-time sensor data and risk score monitoring via Blynk app widgets</em>
 </p>
 
 ### Expo Poster
@@ -58,14 +58,14 @@
 </p>
 
 ### Source Code
-Main sketch (now with Blynk support):
+Main sketch (with Blynk support for alerts & dashboard):
 
 → [`blazeguard_code/blynk_blazeguard.ino`](blazeguard_code/blynk_blazeguard.ino)
 
-Libraries used:
+Key libraries:
 - DHT sensor library
 - Adafruit_GFX & Adafruit_SSD1306
-- Blynk (for IoT connectivity & notifications)
+- Blynk (for IoT connectivity, notifications & email)
 
 Core risk logic snippet:
 
@@ -81,6 +81,7 @@ riskScore = constrain(humFactor + tempFactor + gasFactor, 0, 100);
 if (riskScore > 70) {
   tone(BUZZER_PIN, 800, 200); delay(100);
   tone(BUZZER_PIN, 1000, 200); delay(100);
-  // Blynk notification / widget update here
+  // Blynk actions: push notification + email
   Blynk.notify("HIGH WILDFIRE RISK DETECTED!");
+  Blynk.email("your.email@example.com", "BlazeGuard Alert", "High Risk! Temp: " + String(temperature) + "°C, Risk: " + String(riskScore));
 }
